@@ -1,0 +1,23 @@
+parsing stage
+    pars a site with riddles
+	download riddles in db
+
+
+base stage:
+	shuffle riddle
+	give random riddle on command
+	remove riddle from riddle_list
+
+
+chat stage:
+    !ridddle == give random riddle on command  if no riddle in riddle list --> 'need new site for riddle , next command cige me www. for parsing'
+    !www.    == pars site funct
+
+
+
+another option s:
+    -random generate ( word +  word description(slice))
+    - user can add riddle in riddle list ( !add_riddle == command) (another dict( moderation stage --> in main dicts)
+    - list(dict) №1 - user №1 , list(dict) 3 == user 3 ,user 3 get riddle --> list 3.remove(riddle), list3.shuffle
+    - if date  > past date on (x day) pars site by udp on x day
+
