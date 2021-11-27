@@ -9,7 +9,7 @@ class Parse:
             'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64;  x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
             'accept': '*/*'}  # адрес браузера , которкое значение аццепта
         self.URL = 'https://www.braingle.com/brainteasers/category.php?category=All&fields=&value=&unrated=0&order=3&dir=0&start=' # const
-        self.page_riddle_counter = 0
+        self.page_riddle_counter = -15
 
     def get_html(self, url_page, params = None):
         r = requests.get(url_page , headers = self.HEADERS , params = params)
@@ -45,12 +45,28 @@ class Parse:
     def next_page(self):
         # print('NEXT PAGE')
         self.page_riddle_counter += 15
-        if self.page_riddle_counter <= 15:
-            # print(self.page_riddle_counter)# принт каунтера страницы
+        if self.page_riddle_counter <= 15:  # <= self.last_page * 15
+            print('Page № : %2d  start parsed now ...'%(self.page_riddle_counter//15 +1))
+            # принт каунтера страницы
             self.parse_page()
         else:
             # print(self.list_dict_riddle)
             print('всего распараршено загадок : ' , self.page_riddle_counter)
+
+    def number_last_page(self):
+        url = self.URL + str(self.page_riddle_counter)
+        html = self.get_html(url)
+        if html.status_code == 200 :
+            soup = BeautifulSoup(html.text, 'html.parser')
+            items = soup.find('td', align="center").find_all('a')
+        else:
+            print('Error (number_last_page)')
+        numbers = []
+        for next in items:
+            numbers.append(next.get_text())
+        self.last_page = numbers[-1].strip()
+        tst.next_page()
+
 
     def parse_page(self):
         url = self.URL + str(self.page_riddle_counter)
@@ -63,6 +79,6 @@ class Parse:
 if __name__ == '__main__':
     print()
     tst=Parse()
-    tst.parse_page()
-    for dict in tst.list_dict_riddle:
+    tst.number_last_page()
+    for dict in tst.list_dict_riddle: # залить всё в дб
         print(dict)
