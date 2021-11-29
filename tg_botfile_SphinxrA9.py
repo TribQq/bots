@@ -1,10 +1,11 @@
 import shelve
 import logging
 import random
+from uuid import uuid4
 
-from telegram import Update, ForceReply
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
-
+from telegram import Update, ForceReply, InlineQueryResultArticle,InlineQueryResultPhoto, ParseMode, InputTextMessageContent
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, InlineQueryHandler
+from telegram.utils.helpers import escape_markdown
 
 class Riddle:
     def __init__(self ): # ,head = None , body = None ,answer = None
@@ -88,10 +89,48 @@ def riddle_in_range(update: Update, context: CallbackContext) -> None:
                 update.message.reply_text('Вы неккорректно указали комманду  :) ')
 
 
-
 def riddle_command(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Диапазон возможных номеров от 0 до %2d '%len(shelve.open('riddle_tuples.db')))
 
+def inlinequery(update: Update, context: CallbackContext) -> None:
+    """Handle the inline query."""
+    query = update.inline_query.query
+    if query == "":
+        return
+
+    test_img = 'https://icdn.lenta.ru/images/2021/04/27/16/20210427163138131/detail_9b31eaf4376cdff03e0ba1bcaa826a01.jpg'
+    #next time delete test_img and add pars img result
+    results = [
+        InlineQueryResultArticle(
+            id=str(uuid4()),
+            title="Caps button",
+            # input_photo_content = InputMediaPhoto(y)
+            input_message_content=InputTextMessageContent(query.upper()),
+            # импоорт X тип если нужен X тип ( например пнг)
+            # input_message_content = InputMediaPhoto(z)
+        ),
+        InlineQueryResultArticle(
+            id=str(uuid4()),
+            title="Bold button",
+            input_message_content=InputTextMessageContent(
+                f"*{escape_markdown(query)}*", parse_mode=ParseMode.MARKDOWN
+            ),
+        ),
+        InlineQueryResultArticle(
+            id=str(uuid4()),
+            title="Italic button",
+            input_message_content=InputTextMessageContent(
+                f"_{escape_markdown(query)}_", parse_mode=ParseMode.MARKDOWN
+            ),
+        ),
+        InlineQueryResultPhoto(
+            id=str(uuid4()),
+            photo_url = test_img,
+            thumb_url = test_img,
+            title="Cats",
+        ),
+    ]
+    update.inline_query.answer(results)
 
 def main() -> None:
     """Start the bot."""
@@ -107,8 +146,10 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("Riddle", riddle_command))
     # on non command i.e message - echo the message on Telegram
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, riddle_in_range))
-
     # dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+
+    # on non command i.e message - echo the message on Telegram
+    dispatcher.add_handler(InlineQueryHandler(inlinequery))
 
     # Start the Bot
     updater.start_polling()
@@ -120,6 +161,7 @@ def main() -> None:
 
 
 if __name__ == '__main__':
+    #пользователей заносить в бд как?
     ridddle_user = Riddle()
     main()
 
