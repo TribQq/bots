@@ -8,7 +8,7 @@ from aiogram_calendar import simple_cal_callback, SimpleCalendar, dialog_cal_cal
 
 from config import API_TOKEN
 
-# API_TOKEN = '' uncomment and insert your telegram bot API key here
+API_TOKEN = API_TOKEN #uncomment and insert your telegram bot API key here
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 # Initialize bot and dispatcher
