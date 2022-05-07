@@ -2,4 +2,4 @@
 
 A simple telegram bot to help you download videos and photos from Pinterest
 
-<img src="logo.png">
+<img src="logo.jpg">
