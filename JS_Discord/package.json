@@ -3,8 +3,11 @@
    "version": "1.0.0",
    "description": "A non-commercial discord bot for listening to music",
    "main": "bot.js",
+   "engines": {
+    "node": "16.x"
+  },
    "scripts": {
-     "test": "node bot.js"
+      "start": "node bot.js"
    },
    "author": "Shubham Mishra",
    "license": "ISC",
