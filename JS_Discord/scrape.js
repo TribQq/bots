@@ -3,7 +3,7 @@ const ytdl = require('ytdl-core');
 const streams = require('stream');
 const fs = require('fs');
 const { createAudioResource, StreamType } = require('@discordjs/voice');
-var expression = /\/watch\?v=(\w+)/gi;
+var expression = /\/watch\?v=([a-zA-Z0-9()[\]+\-*\/%]{11})/gi;
 var rgx = new RegExp(expression);
 async function getLink(query){
     const resp = await axios.get(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`);
